@@ -1,0 +1,36 @@
+{% extends "base.html" %}{% block title %}Dashboard{% endblock %}
+{% block content %}<section class="wrap page">
+{% if not student %}
+  <div class="panel"><h1>Start here</h1><p>Create your profile, or explore with a fictional student.</p>
+  <a class="btn" href="{{ url_for('profile') }}">Complete profile</a></div>
+{% elif not role %}
+  <div class="panel"><h1>Hello, {{ student.display_name }}</h1><p>Pick a career goal to see your skill gaps.</p><a class="btn" href="{{ url_for('careers') }}">Choose a career</a></div>
+{% else %}
+<div class="dashboard-heading"><div><p class="eyebrow">YOUR CAREER COMMAND CENTER</p><h1>Welcome back, {{ student.display_name }}</h1><p class="sub">Career goal: <strong>{{ role.title }}</strong></p></div><div class="dashboard-orbit" aria-hidden="true"><span></span><i></i><b>AI</b></div></div>
+<div class="stats">
+  <div class="panel stat score-stat"><div class="score-ring" style="--score:{{ a.score }}%"><strong>{{ a.score }}%</strong></div><div><span>Skill match</span><small class="muted">Weighted progress against a sample profile. Not a hiring chance.</small></div></div>
+  <div class="panel stat"><b>{{ a.counts.achieved }} / {{ a['items']|length }}</b><span>Targets achieved</span><small class="muted">{{ a.counts.improve }} need improvement, {{ a.counts.missing }} missing</small></div>
+  <div class="panel stat"><b>{{ p.percent }}%</b><span>Roadmap completed</span><small class="muted">{{ p.completed }} of {{ p.total }} milestones</small></div>
+  <div class="panel stat"><b>{{ skill_count }}</b><span>Skills recorded</span><small class="muted">Self-reported proficiency</small></div>
+  <div class="panel stat"><b>{{ project_count }}</b><span>Projects completed</span><small class="muted">From your portfolio records</small></div>
+</div>
+<div class="grid2">
+ <div class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">PROGRESS INSIGHTS</p><h2>Skills vs. targets</h2></div><span class="chart-badge">Live profile</span></div>
+  <div class="chart-legend"><span><i class="legend-dot achieved"></i>Target met</span><span><i class="legend-dot improve"></i>Improve</span><span><i class="legend-dot missing"></i>Missing</span></div>
+  <ul class="bars light">{% for i in a['items'] %}
+   <li><span>{{ i.name }}</span><em class="{{ i.status }}">{{ {'achieved':'Target met','improve':'Needs improvement','missing':'Missing'}[i.status] }}</em>
+   <div class="track"><i class="{{ i.status }}" style="width:{{ (100 * [i.current, i.target]|min / i.target)|round|int }}%"></i></div></li>{% endfor %}</ul>
+  <details><summary>How the score works</summary><p class="muted">Score = 100 x sum(importance x min(current, target) / target) / sum(importance). Self-reported levels: 0 Not yet learned, 1 Beginner, 2 Intermediate, 3 Advanced. Skill match changes only when you reassess; roadmap completion changes when you finish milestones.</p></details></div>
+ <div class="panel"><h2>Next recommended action</h2>
+  {% if next %}<p><strong>{{ next.title }}</strong></p><p class="muted">{{ next.objective }}</p><a class="btn" href="{{ url_for('roadmap') }}">Open roadmap</a>
+  {% elif a.top %}<p>Roadmap is complete. Reassess your skills to update your match.</p><a class="btn" href="{{ url_for('assessment') }}">Reassess skills</a>
+  {% else %}<p>All targets met for this profile.</p>{% endif %}
+  <h3>Currently learning</h3>
+  {% if learning %}<ul class="plain">{% for m in learning %}<li>{{ m.skill }}</li>{% endfor %}</ul>{% else %}<p class="muted">Nothing in progress. Start a milestone on the roadmap.</p>{% endif %}
+  <h3>Portfolio project</h3><p>{{ project.title }}: {{ project.problem }}</p>
+  <h3>Explore adjacent paths</h3>
+  {% if alternatives %}<ul class="plain">{% for alt in alternatives %}<li><a href="{{ url_for('careers', q=alt.title) }}">{{ alt.title }}</a> <span class="muted">{{ alt.overlap }} overlapping skill{{ '' if alt.overlap == 1 else 's' }}</span></li>{% endfor %}</ul>
+  {% else %}<p class="muted">Explore the career catalogue to find another path.</p>{% endif %}
+  <h3>Recent activity</h3><ul class="plain">{% for x in activity %}<li>{{ x.message }} <span class="muted">{{ x.created_at[:10] }}</span></li>{% endfor %}</ul></div>
+</div>{% endif %}
+</section>{% endblock %}

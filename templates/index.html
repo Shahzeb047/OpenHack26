@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Turn Your Skills Into Your Next Opportunity.</h1>
+      <p class="lead">Explore career paths, compare the skills you have today, and CareerPath AI shows exactly where the gaps are. Then it builds a learning roadmap in the order that makes sense.</p>
+      <div class="cta">
+        <a class="btn btn-lg" href="{{ url_for('profile') }}">Build My Career Roadmap</a>
+        <a class="btn btn-lg btn-ghost" href="{{ url_for('careers') }}">Explore Career Paths</a>
+        <a class="btn btn-lg btn-ghost" href="{{ url_for('register') }}">Create a free account</a>
+      </div>
+    </div>
+
+    <figure class="preview" aria-label="Sample skill-gap analysis using fictional data">
+      <figcaption>Sample analysis for a fictional student, Data Analyst path</figcaption>
+      <ul class="bars">
+        <li><span>SQL</span><em>Target met</em><div class="track"><i style="width:100%" class="ok"></i></div></li>
+        <li><span>Excel</span><em>Needs improvement</em><div class="track"><i style="width:66%" class="mid"></i><b style="left:100%"></b></div></li>
+        <li><span>Python</span><em>Needs improvement</em><div class="track"><i style="width:33%" class="mid"></i><b style="left:66%"></b></div></li>
+        <li><span>Data visualization</span><em>Missing</em><div class="track"><i style="width:0" class="gap"></i><b style="left:66%"></b></div></li>
+      </ul>
+      <p class="note">Bar = current level. White marker = target level. Fictional values for illustration.</p>
+    </figure>
+  </div>
+</section>
+
+<section id="how" class="section">
+  <div class="wrap">
+    <h2>From where you are to where you want to be</h2>
+    <ol class="steps">
+      <li><h3>Tell us your starting point</h3><p>Add your degree, courses, projects and the skills you already use, with an honest level for each.</p></li>
+      <li><h3>See your skill gaps</h3><p>Compare your levels with a career profile. Each skill is marked as met, needs improvement, or missing, with the reason it matters.</p></li>
+      <li><h3>Follow your roadmap</h3><p>Work through milestones ordered by priority and prerequisites. Each one links to a resource and a practical task.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="wrap">
+    <h2>Career paths to compare against</h2>
+    <p class="sub">Predefined example profiles. They are a starting point, not a verified list of what every employer wants.</p>
+    <div class="grid3">
+      <a class="card" href="{{ url_for('careers', category='data-ai') }}"><h3>Data & AI</h3><p>Data Analyst, Data Scientist, AI Engineer and more.</p></a>
+      <a class="card" href="{{ url_for('careers', category='software-development') }}"><h3>Software Development</h3><p>Build products across frontend, backend, mobile and testing.</p></a>
+      <a class="card" href="{{ url_for('careers', category='cybersecurity-networking') }}"><h3>Cybersecurity</h3><p>Explore security, networks, penetration testing and cloud security.</p></a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap grid3">
+    <div><h3>Explainable scoring</h3><p>The match score is a simple weighted formula you can read. It tracks your progress against a sample profile. It does not predict hiring.</p></div>
+    <div><h3>Roadmaps from real gaps</h3><p>Every milestone comes from a skill you are missing. Nothing is added to fill space.</p></div>
+    <div><h3>Works offline</h3><p>No account, no API key, no paid service. Your progress is saved locally.</p></div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Find out which skill to learn first.</h2>
+    <a class="btn btn-lg" href="{{ url_for('profile') }}">Build My Career Roadmap</a>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% block title %}Roadmap{% endblock %}
+{% block content %}<section class="wrap page roadmap-page">
+<div class="roadmap-hero"><div><p class="eyebrow">PERSONAL LEARNING PLAN</p><h1>{{ role.title }} roadmap</h1><p class="sub">A practical sequence built from your current skill gaps.</p></div><div class="roadmap-score"><strong>{{ p.percent }}%</strong><span>complete</span></div></div>
+<p class="sub progress-copy" id="progress">{{ p.completed }} of {{ p.total }} completed ({{ p.percent }}%)</p>
+{% if not ms %}<div class="panel"><p>No gaps found, so no milestones are needed. Reassess if your skills changed.</p></div>{% endif %}
+<div class="roadmap-list">{% for m in ms %}
+<article class="panel ms" data-ms="{{ m.id }}">
+  <h2>{{ loop.index }}. {{ m.title }}</h2>
+  <p>{{ m.objective }}</p>
+  <p><strong>Practice task:</strong> {{ SKILLS.get(m['skill'], {}).get('task', 'Practice this skill through a small project.') }}</p>
+  <p class="muted">Estimated effort: about {{ m.estimated_hours }} hours (estimate only).</p>
+  <ul class="plain">{% for r in res[m.id] %}<li><a href="{{ r.url }}" target="_blank" rel="noopener noreferrer">{{ r.title }}</a> <span class="muted">({{ r.resource_type }}, availability and pricing not checked)</span></li>{% endfor %}</ul>
+  <div class="seg" role="group" aria-label="Status for {{ m.skill }}">
+    {% for s, label in [('not_started','Not started'),('in_progress','In progress'),('completed','Completed')] %}
+    <button type="button" data-status="{{ s }}" aria-pressed="{{ 'true' if m.status == s else 'false' }}">{{ label }}</button>{% endfor %}
+  </div>
+</article>{% endfor %}</div>
+<div class="panel"><h2>Portfolio project: {{ project.title }}</h2><p>{{ project.problem }}</p>
+<ul class="plain">{% for f in project.features %}<li>{{ f }}</li>{% endfor %}</ul><p class="muted">Deliverables: {{ project.deliverables }} A sample project does not guarantee a job.</p></div>
+<p class="muted">Finished learning a skill? Update your level in <a href="{{ url_for('assessment') }}">Skills</a> so your match score reflects it.</p>
+</section>{% endblock %}

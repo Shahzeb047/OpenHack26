@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}Profile{% endblock %}
+{% block content %}<section class="wrap page narrow">
+<div class="page-banner profile-banner"><div class="avatar-orb">{{ (student.display_name[0] if student and student.display_name else 'C')|upper }}</div><div><p class="eyebrow">PERSONAL IDENTITY</p><h1>Your profile</h1><p class="sub">Shape your roadmap with the details that make your goals unique.</p></div></div>
+<form method="post" class="panel form" novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <label>Preferred name<input name="display_name" required maxlength="80" value="{{ student.display_name if student else '' }}"></label>
+  <label>Degree<input name="degree" maxlength="80" placeholder="e.g. BS Software Engineering" value="{{ (student.degree if student else '') or '' }}"></label>
+  <label>Field of study<input name="field_of_study" maxlength="80" value="{{ (student.field_of_study if student else '') or '' }}"></label>
+  <label>Semester or level<input name="education_level" maxlength="40" placeholder="e.g. Semester 5" value="{{ (student.education_level if student else '') or '' }}"></label>
+  <label>Interests<input name="career_interests" maxlength="240" placeholder="e.g. Python, AI, design, helping people" value="{{ (student.career_interests if student else '') or '' }}"></label>
+  <label>Preferred work type<select name="preferred_work_type"><option value="">Choose one</option>{% for option in ['Building products','Working with data','Designing experiences','Security and reliability','Leading and collaborating'] %}<option {{ 'selected' if student and student.preferred_work_type == option }}>{{ option }}</option>{% endfor %}</select></label>
+  <label>Weekly learning time<select name="weekly_learning_time"><option value="">Choose one</option>{% for option in ['1-3 hours','4-6 hours','7-10 hours','10+ hours'] %}<option {{ 'selected' if student and student.weekly_learning_time == option }}>{{ option }}</option>{% endfor %}</select></label>
+  <label>Short-term learning goal<textarea name="learning_goals" maxlength="300" rows="3">{{ (student.learning_goals if student else '') or '' }}</textarea></label>
+  <button class="btn" type="submit">Save profile</button>
+</form>
+{% if student %}<form method="post" action="{{ url_for('reset') }}" data-confirm="Delete all saved profile, skills and roadmap data? This cannot be undone." class="danger">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <button class="btn btn-danger" type="submit">Delete all my data</button></form>{% endif %}
+</section>{% endblock %}

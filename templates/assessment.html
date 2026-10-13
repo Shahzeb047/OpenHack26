@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}Skill assessment{% endblock %}
+{% block content %}<section class="wrap page narrow">
+<div class="page-banner skills-banner"><div class="skill-icon">✦</div><div><p class="eyebrow">SKILL INTELLIGENCE</p><h1>Rate your skills for {{ role.title }}</h1></div></div>
+<p class="sub">These are self-reported levels. They are not proof of competence. Be honest, since the roadmap depends on them.</p>
+<form method="post" class="panel form">
+<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+{% for i in a["items"] %}
+  <label class="skillrow"><span><strong>{{ i.name }}</strong><br><small class="muted">Target: {{ LEVELS[i.target] }}. {{ i.why }}</small></span>
+    <select name="skill_{{ i.skill_id }}">{% for lv in LEVELS %}<option value="{{ loop.index0 }}" {{ 'selected' if i.current == loop.index0 }}>{{ lv }}</option>{% endfor %}</select></label>
+{% endfor %}
+  <button class="btn" type="submit">Save and analyse</button>
+</form></section>{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% block title %}Careers{% endblock %}
+{% block content %}<section class="wrap page">
+<h1>Explore your next career</h1>
+<p class="sub">Search across technology, data, design and business. Profiles are transparent educational examples, not verified employer requirements.</p>
+<div class="explorer-art" aria-hidden="true"><span>⌁</span><span>✦</span><span>◌</span></div>
+<form class="panel explorer-form" method="get">
+  <label>Search your dream career — e.g., AI Engineer, Data Analyst, Cybersecurity...
+    <input name="q" value="{{ query }}" placeholder="Search career names, skills or interests" autofocus>
+  </label>
+  <label>Filter by category<select name="category"><option value="">All categories</option>
+    {% for slug, label in categories %}<option value="{{ slug }}" {{ 'selected' if category == slug }}>{{ label }}</option>{% endfor %}
+  </select></label>
+  <button class="btn" type="submit">Find careers</button>
+</form>
+<div class="category-links">{% for slug, label in categories %}<a href="{{ url_for('careers', category=slug) }}">{{ label }}</a>{% endfor %}</div>
+{% if not roles %}<div class="panel empty"><h2>No catalog match yet</h2><p>That is a valid career goal. Add it as a custom target and enter the skills you want to work toward.</p></div>{% endif %}
+<details class="panel custom-career"><summary>Add a custom career target</summary>
+  <p class="muted">Custom requirements are user-entered and are not verified job-market data.</p>
+  <form method="post" class="form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Job title<input name="custom_title" maxlength="100" placeholder="e.g., Research Software Engineer" required></label>
+    <label>Required skills, comma separated<textarea name="custom_skills" rows="3" placeholder="Python, APIs, Testing" required></textarea></label>
+    <button class="btn" type="submit">Use this custom target</button>
+  </form>
+</details>
+<div class="grid3">
+{% for slug, r in roles.items() %}
+<article class="panel {{ 'selected' if selected and selected.slug == slug }}">
+  <p class="eyebrow">{{ dict(categories).get(r.category, 'Custom target') }}</p><h2>{{ r.title }}</h2><p>{{ r.overview }}</p>
+  <h3>Target skills</h3>
+  <ul class="plain">{% for n, t, imp, pre in r.skills %}<li><strong>{{ n }}</strong> <span class="muted">target: {{ LEVELS[t] }}, importance {{ imp }}/3{% if pre %}, after {{ pre }}{% endif %}</span></li>{% endfor %}</ul>
+  <details><summary>Role profile</summary>
+    <h3>Common responsibilities</h3><ul class="plain">{% for item in r.responsibilities %}<li>{{ item }}</li>{% endfor %}</ul>
+    <h3>Useful soft skills</h3><p class="muted">{{ r.soft_skills|join(', ') }}</p>
+    <h3>Recommended tools</h3><p class="muted">{{ r.tools|join(', ') }}</p>
+  </details>
+  <h3>Portfolio project</h3><p><strong>{{ r.project.title }}</strong><br>{{ r.project.problem }}</p>
+  <form method="post"><input type="hidden" name="slug" value="{{ slug }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button class="btn" type="submit">{{ 'Selected - reassess skills' if selected and selected.slug == slug else 'Select ' ~ r.title }}</button></form>
+</article>{% endfor %}
+</div></section>{% endblock %}
